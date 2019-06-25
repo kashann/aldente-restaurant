@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>Kitchen Order Display</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <style>
+            body{
+                margin-top:30px;
+                background: #eacda3;
+            }
+            
+            button {
+                color: white;
+                background: #c12321;
+                border-radius: 20%;
+                border: 2px solid white;
+                padding: 5px;
+                margin-top: 2px;
+                opacity: 0.9;
+            }
+            
+            button:hover {
+                opacity: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <audio id="audio" src="https://www.soundjay.com/misc/sounds/bulb-horn-01.wav" autostart="false"></audio>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="well">
+                        <h3>Current Orders: <a class="nr" id="nr">0</a></h3>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="order" id="order"></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var socket = io.connect();
+            var $nr = $('#nr');
+            var noOrders = 0;
+            
+            $(function(){
+                var $order = $('#order');
+                
+                socket.on('order', function(data){
+                    noOrders++;
+                    $nr.text(noOrders);
+                    $order.append('<div class="well"><div class="col-md-10">'+data.quantity+'X '+data.name+' ('+data.observation+') Waiter:'+
+                        data.waiter+'</div><button type="button" id="fulfill" class="effectType" data-effect="delete" onClick="clearFood(this,'+
+                        data.id+','+data.waiter+')" >FULFILLED</button></div>');
+                    beepSound();
+                });
+                
+                
+            });
+            
+            function clearFood(element, id, waiter)
+            {
+                noOrders--;
+                $nr.text(noOrders);
+                $(element).parent().remove();
+                socket.emit('kitchen', {oid:id, wid:waiter});
+            }
+            
+            function beepSound() {
+                var beep = document.getElementById("audio");
+                beep.play();
+            }
+        </script>
+    </body>
+</html>
