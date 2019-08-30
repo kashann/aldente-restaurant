@@ -51,6 +51,21 @@ Restaurant App ->> Waiter: Confirm payment
 Waiter --><!--> Client: Close table
 <!--```-->
 
+<!--```mermaid
+graph LR
+S((Start)) --> <!--A(Select menu items and quantities)-->
+<!--A --> <!--B(Add items to order)-->
+<!--B --> <!--C(Review order)-->
+<!--C --> <!--D{OK?}-->
+<!--D -- no --> <!--C-->
+<!--D -- yes --> <!--E(Send order to Waiter)-->
+<!--E --> <!--F(Get served and eat)-->
+<!--F --> <!--G{Want anything else?}-->
+<!--G -- yes --> <!--A-->
+<!--G -- no --> <!--H(Pay)-->
+<!--H --> <!--I((End))-->
+<!--```-->
+
 ## Client side app
 The Android application, called “Al Dente Restaurant Solutions”, represents a solution to many problems restaurants have these days, such as waiting too long for the food, or not being able to flag your waiter. It also provides a digital menu from where the customers can order directly or request the service of their waiter. After they have added the items to the cart, they can preview the order, edit it if needed, and submit it. After the customer has been served, and he is done ordering, he can ask for the bill. A dialog will show up, where he can view the contents of the order, choose the payment method and the tip amount, and finally, request the check.
 
